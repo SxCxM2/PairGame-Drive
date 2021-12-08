@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Threading;
 
 namespace PairGameDrive
 {
@@ -7,10 +8,8 @@ namespace PairGameDrive
     {
         static readonly int width = 50;
         static readonly int height = 30;
-
-        static int windowWidth;
-        static int windowHeight;
-        static readonly Random random = new();
+        
+        static readonly Random random = new Random();
         static char[,] scene;
         static int score;
         static int carPosition;
@@ -25,7 +24,6 @@ namespace PairGameDrive
             Console.CursorVisible = false;
             try
             {
-                Initialize();
                 LaunchScreen();
                 while (keepPlaying)
                 {
@@ -65,23 +63,17 @@ namespace PairGameDrive
                 Console.CursorVisible = true;
             }
         }
-        static void Initialize()
+        static void LaunchScreen()
         {
-            windowWidth = Console.WindowWidth;
-            windowHeight = Console.WindowHeight;
-            if (OperatingSystem.IsWindows())
-            {
-                if (windowWidth < width && OperatingSystem.IsWindows())
-                {
-                    windowWidth = Console.WindowWidth = width + 1;
-                }
-                if (windowHeight < height && OperatingSystem.IsWindows())
-                {
-                    windowHeight = Console.WindowHeight = height + 1;
-                }
-                Console.BufferWidth = windowWidth;
-                Console.BufferWidth = windowHeight;
-            }
+            Console.Clear();
+            Console.WriteLine("This is a driving game.");
+            Console.WriteLine();
+            Console.WriteLine("Stay on the road!");
+            Console.WriteLine();
+            Console.WriteLine("Use A, W, and D to control your velocity.");
+            Console.WriteLine();
+            Console.Write("Press [enter] to start...");
+            PressEnterToContinue();
         }
         static void InitializeScene()
         {
@@ -109,7 +101,7 @@ namespace PairGameDrive
         }
         static void Render()
         {
-            StringBuilder stringBuilder = new(width * height);
+            StringBuilder stringBuilder = new StringBuilder(width * height);
             for (int i = height - 1; i >= 0; i--)
             {
                 for (int j = 0; j < width; j++)
@@ -141,13 +133,13 @@ namespace PairGameDrive
                 ConsoleKey key = Console.ReadKey(true).Key;
                 switch (key)
                 {
-                    case ConsoleKey.A or ConsoleKey.LeftArrow:
+                    case ConsoleKey.A:
                         carVelocity = -1;
                         break;
-                    case ConsoleKey.D or ConsoleKey.RightArrow:
+                    case ConsoleKey.D:
                         carVelocity = +1;
                         break;
-                    case ConsoleKey.W or ConsoleKey.UpArrow or ConsoleKey.S or ConsoleKey.DownArrow:
+                    case ConsoleKey.W:
                         carVelocity = 0;
                         break;
                     case ConsoleKey.Escape:
@@ -160,6 +152,82 @@ namespace PairGameDrive
                 }
             }
         }
-
+        static void GameOverScreen()
+        {
+            Console.SetCursorPosition(0, 0);
+            Console.WriteLine("Game Over");
+            Console.WriteLine($"Score: {score}");
+            Console.WriteLine("Play Again (Y/N)");
+        GetInput:
+            ConsoleKey key = Console.ReadKey(true).Key;
+            switch (key)
+            {
+                case ConsoleKey.Y:
+                    keepPlaying = true;
+                    break;
+                case ConsoleKey.N:
+                    keepPlaying = false;
+                    break;
+                case ConsoleKey.Escape:
+                    keepPlaying = false;
+                    break;
+                default:
+                    goto GetInput;
+            }
+        }
+        static void Update()
+        {
+            for (int i = 0; i < height - 1; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    scene[i, j] = scene[i + 1, j];
+                }
+            }
+            int roadUpdate =
+                random.Next(5) < 4 ? previousRoadUpdate :
+                random.Next(3) - 1;
+            if (roadUpdate is -1 && scene[height - 1, 0] is ' ') roadUpdate = 1;
+            if (roadUpdate is 1 && scene[height - 1, width - 1] is ' ') roadUpdate = -1;
+            switch (roadUpdate)
+            {
+                case -1:
+                    for (int i = 0; i < width - 1; i++)
+                    {
+                        scene[height - 1, i] = scene[height - 1, i + 1];
+                    }
+                    scene[height - 1, width - 1] = '.';
+                    break;
+                case 1:
+                    for (int i = width - 1; i > 0 ; i--)
+                    {
+                        
+                        scene[height - 1, i] = scene[height - 1, i - 1];
+                    }
+                    scene[height - 1, 0] = '.';
+                    break;
+            }
+            previousRoadUpdate = roadUpdate;
+            carPosition += carVelocity;
+            if (carPosition < 0 || carPosition >= width || scene[1, carPosition] != ' ')
+            {
+                gameRunning = false;
+            }
+            score++;
+        }
+        static void PressEnterToContinue()
+        {
+        GetInput:
+            ConsoleKey key = Console.ReadKey(true).Key;
+            switch (key)
+            {
+                case ConsoleKey.Enter:
+                    break;
+                case ConsoleKey.Escape:
+                    keepPlaying = false;
+                    break;
+                default: goto GetInput;
+            }
+        }
     }
 }

@@ -1,0 +1,7 @@
+C:\Users\nounv\source\repos\PairGameDrive\PairGameDrive\bin\Debug\PairGameDrive.exe.config
+C:\Users\nounv\source\repos\PairGameDrive\PairGameDrive\bin\Debug\PairGameDrive.exe
+C:\Users\nounv\source\repos\PairGameDrive\PairGameDrive\bin\Debug\PairGameDrive.pdb
+C:\Users\nounv\source\repos\PairGameDrive\PairGameDrive\obj\Debug\PairGameDrive.csproj.AssemblyReference.cache
+C:\Users\nounv\source\repos\PairGameDrive\PairGameDrive\obj\Debug\PairGameDrive.csproj.CoreCompileInputs.cache
+C:\Users\nounv\source\repos\PairGameDrive\PairGameDrive\obj\Debug\PairGameDrive.exe
+C:\Users\nounv\source\repos\PairGameDrive\PairGameDrive\obj\Debug\PairGameDrive.pdb
