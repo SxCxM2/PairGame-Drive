@@ -136,9 +136,18 @@ namespace PairGameDrive
                     case ConsoleKey.A:
                         carVelocity = -1;
                         break;
+                    case ConsoleKey.LeftArrow:
+                        carVelocity = -1;
+                        break;
+
                     case ConsoleKey.D:
                         carVelocity = +1;
                         break;
+
+                    case ConsoleKey.RightArrow:
+                        carVelocity = +1;
+                        break;
+
                     case ConsoleKey.W:
                         carVelocity = 0;
                         break;
