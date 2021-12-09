@@ -151,6 +151,9 @@ namespace PairGameDrive
                     case ConsoleKey.W:
                         carVelocity = 0;
                         break;
+                    case ConsoleKey.UpArrow:
+                        carVelocity = 0;
+                        break;
                     case ConsoleKey.Escape:
                         gameRunning = false;
                         keepPlaying = false;
